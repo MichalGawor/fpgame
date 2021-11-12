@@ -26,9 +26,6 @@ source-repository head
 library
   exposed-modules:
       Kinematics
-      Objects
-      Plane
-      Time
   other-modules:
       Paths_game
   hs-source-dirs:
@@ -40,6 +37,8 @@ library
 executable game-exe
   main-is: Main.hs
   other-modules:
+      Kinematics
+      Plane
       Paths_game
   hs-source-dirs:
       app
