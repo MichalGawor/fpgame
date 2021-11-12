@@ -9,7 +9,7 @@ module Objects
 
 -- ### Weapons
 type RPM = Int -- rounds per minute
-data Weapon = MkWeapon Projectile Damage RPM | NoWeapon 
+data Weapon = MkWeapon Projectile RPM | NoWeapon 
 data Projectile = MkBulletProjectile Bullet | MkRocketProjectile Rocket | MkBeamProjectile Beam
 data Bullet = MkBullet Position Velocity Damage deriving (Shootable, Positioned, Renderable, Moveable)
 data Rocket = MkRocket Position Velocity Damage AngularSpeed Time deriving (Shootable, Positioned, Renderable, Moveable)
@@ -28,20 +28,45 @@ data Ship = Ship {
 data PlayerShip = MkPlayerShip Ship deriving (Renderable, Moveable, Killable)
 
 -- # Enemy ships
-data SuicideShip = MkSuicideShip Ship AngularSpeed deriving (Renderable, Moveable, Killable)
-data GunShip = MkGunShip Ship deriving (Renderable, Moveable, Killable)
-data RocketShip = MkRocketShip Ship deriving (Renderable, Moveable, Killable)
+data SuicideShip = MkSuicideShip Ship AngularSpeed deriving (Renderable, Killable)
+data GunShip = MkGunShip Ship deriving (Renderable, Killable)
+data RocketShip = MkRocketShip Ship deriving (Renderable, Killable)
 
 -- # Enemy datatype
 data Enemy = MkSuicideEnemy SuicideShip | MkGunEnemy GunShip | MkRocketEnemy MkRocketShip
 
+
+-- # Moveable objects
 instance Moveable SuicideShip where
     move :: SuicideShip -> Target -> Maybe SuicideShip
-    move (MkSuicideShip (Ship { position, speed, velocity}), _) NoTarget = uniformLinearMotion position velocity 
-    move (MkSuicideShip (Ship { position, speed, velocity}), maxAngularSpeed) (MkTarget (x, y)) = let 
+    move (MkSuicideShip sShip@(Ship { position, velocity}), _) NoTarget = let 
+                                                                        newPosition = uniformLinearMotion position velocity
+                                                                        in (MkSuicideShip sShip{ position = newPosition, velocity = velocity }, maxAngularSpeed)
+    move (MkSuicideShip sShip@(Ship { position, velocity}), maxAngularSpeed) (MkTarget (x, y)) = let 
                                                                                                       homingTrajectory = homingMotion position velocity maxAngularSpeed (x, y)
-                                                                                                      in uniformLinearMotion position homingTrajectory 
+                                                                                                      newVelocity = homingTrajectory
+                                                                                                      newPosition = uniformLinearMotion position homingTrajectory 
+                                                                                                      in (MkSuicideShip sShip{ position = newPosition, velocity = newVelocity }, maxAngularSpeed)
 
-    movementSpeed :: SuicideShip -> SuicideShip
-    movementSpeed ()
-    
+
+instance Moveable GunShip where
+    move :: GunShip -> Target -> Maybe GunShip
+    move (MkGunShip (Ship {position, velocity})), _) _ = uniformLinearMotion position velocity
+
+instance Moveable RocketShip where
+    move :: RocketShip -> Target -> Maybe RocketShip
+    move (MkRocketShip (Ship {position, velocity}))
+
+-- # Shootable
+instance Shootable Weapon where
+    shoot :: Weapon -> Maybe Projectile
+    shoot NoWeapon = Nothing
+    shoot (MkWeapon (MkBeam _ _ _ _)) = Nothing -- #TODO MAYBE 
+    shoot (MkWeapon projectile rpm) = projectile -- #TODO MUST fire rate handling
+
+instance Killable Ship where
+    takeDamage ship damage :: Ship -> Damage -> Maybe Ship
+    takeDamage ship@(Ship { currHp, position, collisionDamage }) damage | currHp > damaga = let newHp = currHp - damage 
+                                                                                                in Just ship{ currHp = newHp, position = position, collisionDamage = collisionDamage }
+                                                                        | isInScreen = Nothing
+                                                                        | otherwise = Nothing -- DEAL AREA DAMAGE HERE 
