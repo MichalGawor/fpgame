@@ -35,6 +35,6 @@ homingMotion position@(x y) currVelocity maxAngle target@(x' y') = let shift = (
                                                            otherwise -> polarToVec (polarVecAddAngle (vecToPolar position) angle)
 
 
--- ### Movement
+-- ### Movement on the plane
 class Moveable a where
-    move :: a -> Target ->  a
+    move :: a -> Target -> Maybe a
