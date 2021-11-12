@@ -1,3 +1,11 @@
+module Ships where 
+
+import Data.Angle (Degree)
+
+import Objects
+import Plane
+import Projectiles
+
 {-# LANGUAGE NamedFieldPuns #-}
 -- # Ships
 --      Ship data record stores data fields shared by all the ships and implements its mortality
@@ -43,7 +51,7 @@ instance Moveable RocketShip where
 
 
 -- ## Suicide ship
-data SuicideShip = MkSuicideShip Ship AngularSpeed deriving (Killable)
+data SuicideShip = MkSuicideShip Ship (Deegres Float) deriving (Killable)
 
 instance Moveable SuicideShip where
     -- moves straight if no target
@@ -58,3 +66,13 @@ instance Moveable SuicideShip where
                                                                                                       newPosition = uniformLinearMotion position homingTrajectory 
                                                                                                       in (MkSuicideShip ship{ position = newPosition, velocity = newVelocity }, maxAngularSpeed)
 
+
+
+-- TESTING
+
+class Renderable a where
+    render :: IO ()
+
+class Renderable Ship where
+    render :: IO ()
+    render ship@{ position } = show position

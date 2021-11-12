@@ -1,3 +1,5 @@
+module Objects where
+
 -- # Object classes
 -- # every object can be moved
 class Moveable a where
@@ -9,7 +11,7 @@ class Renderable a where
 
 -- # some objects can be despawned
 class Killable a where 
-    takedamage :: a -> Damage -> Maybe a
+    takeDamage :: a -> Damage -> Maybe a
 
 -- # some objects can produce projectile
 class Shootable a where

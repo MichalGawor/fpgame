@@ -1,15 +1,14 @@
-module Plane
-    ( Vector ScreenHeight, ScreenWidth, Resoulution
-    ) where
+module Plane where
 
 import Graphics.Gloss (Point)
-import Data.Angle (Angle, Degree, arccosine, cosine, sine)
+import Data.Angle (Degrees, arccosine, cosine, sine)
 
 
 -- ### Types
-type Vector = Point
 type HitBox = (Point, Point) -- square hitbox
-type PolarVector = Float (Degree Float)
+type PolarVector = (Float, (Degrees Float))
+data Target = MkTarget Point | NoTarget
+type Vector = Point
 
 type ScreenWidth = Float -- Gloss uses Floats 
 type ScreenHeight = Float -- Gloss uses Floats
@@ -33,15 +32,15 @@ vecToAngular (x, y) = let magnitude = (sqrt (x ** 2 + y ** 2))
 
 polarToVec :: PolarVector -> Vector
 -- represent polar coords as a vector
-polarToVec radius (Degree angle) = (radius * cosine angle, radius * sine angle)
+polarToVec (radius, (Degrees angle)) = (radius * cosine angle, radius * sine angle)
 
 polarVecAddAngle :: PolarVector -> Degrees Float -> PolarVector
 -- move polar by angle
-polarVecAddAngle (radius (Degree angle)) (Degree deltaAngle) = radius (Degree (angle + deltaAngle)) 
+polarVecAddAngle (radius, (Degrees angle)) (Degrees deltaAngle) = radius (Degree (angle + deltaAngle)) 
 
 -- ### Screen control
 isInScreen :: Position -> Bool
-isInScreen (x y) | x > ScreenWidth || x < 0 || y > ScreenWidth || y < 0 = True
-                 | otherwise = False
+isInScreen (x, y) | x > ScreenWidth || x < 0 || y > ScreenWidth || y < 0 = True
+                  | otherwise = False
 
 

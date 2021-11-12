@@ -1,3 +1,7 @@
+module Projectiles where
+
+import Objects
+import Plane
 {-# LANGUAGE NamedFieldPuns #-}
 -- # Basic types
 type RPM = Int -- rounds per minute
@@ -12,7 +16,7 @@ instance Shootable Weapon where
     shoot (MkWeapon projectile rpm) = Just projectile -- #TODO MUST fire rate handling
 
 -- # Projectile
-data Projectile = MkBulletProjectile Bullet | MkRocketProjectile Rocket | MkBeamProjectile Beam deriving (Moveable)
+data Projectile = MkBulletProjectile Bullet | MkRocketProjectile Rocket deriving (Moveable, Killable)
 
 -- ## Projectiles 
 -- ## Bullet 
@@ -25,6 +29,11 @@ instance Moveable Bullet where
     -- behaves independent on the targets due to innertia of the bullet 
     move bullet@{ position, velocity} _ = let newPosition = uniformLinearMotion position velocity
                                               in bullet{ position=position, velocity=velocity}
+
+instance Killable Bullet where 
+    -- just so Projectile can derive Killable
+    takeDamage :: Bullet -> Damage -> Maybe Bullet
+    takeDamage bullet _ = Just bullet
 
 -- ## Rocket 
 data Rocket = MkRocket {

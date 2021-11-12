@@ -7,6 +7,7 @@ type Acceleration = Vector
 type Velocity = Vector
 type AngularSpeed = Float
 -- note that Target isn't explicitly used here, but it allows for pattern match against linear or homing movement 
+data Target = MkTarget Point | NoTarget
 
 
 -- ### Motion equations
