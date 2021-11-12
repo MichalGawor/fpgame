@@ -1,3 +1,4 @@
+{-# LANGUAGE NamedFieldPuns #-}
 -- # Basic types
 type RPM = Int -- rounds per minute
 
@@ -15,37 +16,40 @@ data Projectile = MkBulletProjectile Bullet | MkRocketProjectile Rocket | MkBeam
 
 -- ## Projectiles 
 -- ## Bullet 
-data Bullet = MkBullet Position Velocity Damage
+data Bullet = MkBullet { position::Position,
+                         velocity::Velocity, 
+                         damage::Damage}
+
+instance Moveable Bullet where
+    move :: Bullet -> Target -> Maybe Bullet
+    -- behaves independent on the targets due to innertia of the bullet 
+    move bullet@{ position, velocity} _ = let newPosition = uniformLinearMotion position velocity
+                                              in bullet{ position=position, velocity=velocity}
 
 -- ## Rocket 
-data Rocket = MkRocket Position Velocity Damage AngularSpeed Time
+data Rocket = MkRocket {
+    position :: Position 
+    velocity :: Velocity 
+    damage :: Damage 
+    maxAngularSpeed :: AngularSpeed 
+    existingTime :: Time
+}
 
 instance Killable Rocket where
     takeDamage :: Rocket -> Damage -> Maybe Rocket 
-    takeDamage (MkRocket position velocity damage angularSpeed time) = 
+    takeDamage rocket dealDamage | dealDamage < 1 = Nothing
+                                 | otherwise = Just rocket 
 
 instance Moveable Rocket where
     move :: Rocket -> Target -> Maybe Rocket
     -- if no target move straight forward
     move rocket@{ position, velocity } NoTarget = let newPosition = uniformLinearMotion position velocity
-                                                                   in rocket{ position=newPosition, velocity=velocity }
+                                                      in rocket{ position=newPosition, velocity=velocity }
     -- otherwise track the target
-    move rocket@{ position, velocity, angularSpeed}
-    
-    -- otherwise track the target
-instance Moveable SuicideShip where
-    move :: SuicideShip -> Target -> Maybe SuicideShip
-    move (MkSuicideShip ship@(Ship { position, velocity}), _) NoTarget = let 
-                                                                             newPosition = uniformLinearMotion position velocity
-                                                                             in MkSuicideShip ship{ position = newPosition, velocity = velocity } maxAngularSpeed
-    move (MkSuicideShip ship@(Ship { position, velocity}), maxAngularSpeed) (MkTarget (x, y)) = let 
-                                                                                                      homingTrajectory = homingMotion position velocity maxAngularSpeed (x, y)
-                                                                                                      newVelocity = homingTrajectory
-                                                                                                      newPosition = uniformLinearMotion position homingTrajectory 
-                                                                                                      in (MkSuicideShip ship{ position = newPosition, velocity = newVelocity }, maxAngularSpeed)
-
-
-
+    move rocket@{ position, velocity, maxAngularSpeed} (MkTarget (x, y)) = let homingTrajectory = homingMotion position velocity maxAngularSpeed (x, y)
+                                                                               newVelocity = homingTrajectory
+                                                                               newPosition = uniformLinearMotion position homingTrajectory
+                                                                               in rokcet{ position=newPosition, velocity=newVelocity, maxAngularSpeed=maxAngularSpeed }
 
 -- ## Beam ON HOLD, MAYBE IN FUTURE
 data Beam = MkBeam Position Width Damage Time (Shootable, Positioned, Renderable)
