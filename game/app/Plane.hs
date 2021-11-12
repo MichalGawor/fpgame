@@ -1,7 +1,7 @@
 module Plane where
 
+import Data.Angle
 import Graphics.Gloss (Point)
-import Data.Angle (Degrees, arccosine, cosine, sine)
 
 
 -- ### Types
@@ -27,20 +27,24 @@ vecAngle (x, y) (x', y') = let cosA = ((x * x') + (y * y')) / ((sqrt (x ** 2 + y
 
 vecToPolar :: Vector -> PolarVector
 -- represent vector in polar coordinater
-vecToAngular (x, y) = let magnitude = (sqrt (x ** 2 + y ** 2))
-                          in MkAngularVector magnitude arccosine (x/magnitude)
+vecToPolar (x, y) = let magnitude = (sqrt (x ** 2 + y ** 2))
+                          in (magnitude, (arccosine (x/magnitude)))
 
 polarToVec :: PolarVector -> Vector
 -- represent polar coords as a vector
-polarToVec (radius, (Degrees angle)) = (radius * cosine angle, radius * sine angle)
+polarToVec (radius, angle) = (radius * (cosine angle), radius * (sine angle))
 
 polarVecAddAngle :: PolarVector -> Degrees Float -> PolarVector
 -- move polar by angle
-polarVecAddAngle (radius, (Degrees angle)) (Degrees deltaAngle) = radius (Degree (angle + deltaAngle)) 
+polarVecAddAngle (radius, Degrees angle) (Degrees deltaAngle) = (radius, (Degrees (angle + deltaAngle))) 
 
 -- ### Screen control
-isInScreen :: Position -> Bool
-isInScreen (x, y) | x > ScreenWidth || x < 0 || y > ScreenWidth || y < 0 = True
+isInScreen :: Point -> Bool
+isInScreen (x, y) | x > screenWidth || x < 0 || y > screenWidth || y < 0 = True
                   | otherwise = False
 
+screenWidth :: ScreenWidth
+screenWidth = 800
 
+screenHeight :: ScreenHeight
+screenHeight = 640

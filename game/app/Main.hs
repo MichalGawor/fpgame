@@ -1,7 +1,7 @@
 module Main where
 
 
-import Data.Angle (Degree)
+import Data.Angle (Degrees)
 
 import Ships
 import Plane
@@ -14,8 +14,3 @@ testShip :: Ship
 testShip = MkShip 100 100 NoWeapon (50, 50)
 
 
-screenWidth :: ScreenWidth
-screenWidth = 800
-
-screenHeight :: ScreenHeight
-screenHeight = 640
