@@ -13,15 +13,10 @@ import Objects.Projectiles.Weapon
 import Objects.Ships
 import Plane
 
-noTarget :: Target Point
-noTarget = NoTarget
+
 
 main :: IO ()
-main = do 
-        putStrLn (show testSuicideShip)
-            do 
-            movedShip <- move testSuicideShip (noTarget)
-            putStrLn (show (movedShip))
+main = putStrLn (show testSuicideShip)
 
 testSuicideShip :: SuicideShip
 testSuicideShip = MkSuicideShip testShip (Degrees (fromIntegral 5))
@@ -31,3 +26,7 @@ testShip = Ship {maxHp=100, currHp=100, weapon=NoWeapon, position=(50, 50), velo
 
 testGunShip :: GunShip 
 testGunShip = MkGunShip testShip
+
+noTarget :: Target Point
+noTarget = NoTarget
+
