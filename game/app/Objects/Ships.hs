@@ -56,7 +56,7 @@ instance Moveable RocketShip where
 
 
 -- ## Suicide ship
-data SuicideShip = MkSuicideShip Ship (Degrees Float) -- deriving (Killable)
+data SuicideShip = MkSuicideShip Ship (Degrees Float) deriving (Show) -- deriving (Killable)
 
 instance Moveable SuicideShip where
     -- moves straight if no target
