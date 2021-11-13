@@ -6,6 +6,7 @@ import Data.Angle (Degrees)
 
 import Kinematics
 import Plane
+import Time
 import Objects.Objects
 import Objects.Projectiles.Weapon
 
@@ -29,7 +30,10 @@ instance Killable Ship where
 data PlayerShip = MkPlayerShip Ship 
 
 -- # Enemy datatype
-data Enemy = MkSuicideEnemy SuicideShip | MkGunEnemy GunShip | MkRocketEnemy RocketShip -- deriving (Moveable, Renderable, Killable)
+data Enemy = MkSuicideEnemy SuicideShip | MkGunEnemy GunShip | MkRocketEnemy RocketShip | MkExplosion Time -- deriving (Moveable, Renderable, Killable)
+
+-- #
+data ObjectOrExplosion a = MkObjectOrExplosion a | MkObjectOrExplosion (Float, Float, Time)
 
 -- ## Enemy ships
 -- ## Gun ship
