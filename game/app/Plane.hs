@@ -1,15 +1,14 @@
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE InstanceSigs #-}
+
 module Plane where
 
 import Data.Angle
-import Graphics.Gloss (Point)
-
-
 -- ### Types
 type HitBox = (Point, Point) -- square hitbox
 type PolarVector = (Float, (Degrees Float))
-data Target = MkTarget Point | NoTarget
 type Vector = Point
-
+type Point = (Float, Float)
 type ScreenWidth = Float -- Gloss uses Floats 
 type ScreenHeight = Float -- Gloss uses Floats
 type Resoulution = (ScreenWidth, ScreenHeight)
