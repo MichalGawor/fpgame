@@ -2,7 +2,7 @@
 {-# LANGUAGE InstanceSigs #-}
 module Objects.Objects where
 
-
+import Graphics.Gloss
 
 import Kinematics
 import Plane
@@ -11,6 +11,9 @@ import Plane
 type Damage = Float
 type Hp = Float
 
+-- # Every object is an object
+class Object a where
+    isKillable :: a -> Bool
 
 -- # Object classes
 -- # every object can be moved
@@ -19,7 +22,8 @@ class Moveable a where
 
 -- # every object can be rendered
 class Renderable a where
-    render :: a -- #TODO
+    render :: a -> Picture
+
 
 -- # some objects can be despawned
 class Killable a where 

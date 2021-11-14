@@ -7,6 +7,11 @@ module Main where
 
 import Data.Angle
 
+import MVC.Controller
+import MVC.GameModel
+import MVC.View
+
+import Graphics.Gloss.Interface.Pure.Simulate
 import Kinematics
 import Objects.Objects
 import Objects.Projectiles.Weapon
@@ -36,12 +41,19 @@ import Plane
 
 import Graphics.Gloss.Interface.IO.Game
 
+fps :: Int
+fps = 30
 
-import Controller
-import Model
-import View
+width, height, offset :: Int
+width = 300
+height = 300
+offset = 100
 
-import UI_FiniteStateMachine
+background :: Color
+background = black
+
+window :: Display
+window = InWindow "Shoot'em All" (width, height) (offset, offset)
 
 main :: IO ()
-main = let Appl
+main = simulate window background fps initialGameState MVC.View.renderGame MVC.Controller.update

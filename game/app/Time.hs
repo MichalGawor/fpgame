@@ -1,5 +1,5 @@
-module Time where
-
 {-# LANGUAGE NamedFieldPuns #-}
 
-data Time = Time { time :: Int }
+module Time where
+
+data Time = Time { time :: Float }

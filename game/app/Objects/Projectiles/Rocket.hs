@@ -3,9 +3,12 @@
 
 module Objects.Projectiles.Rocket where
 
+import Graphics.Gloss
+
 import Kinematics
 import Plane
 import Objects.Objects
+import Time
 
 
 data Rocket = MkRocket {

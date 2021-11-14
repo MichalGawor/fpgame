@@ -9,7 +9,7 @@ import Objects.Projectiles.Rocket
 
 -- # Basic types
 
-data Projectile = MkPojectileBullet Bullet | MkProjectileRocket Rocket
+data Projectile = MkBulletProjectile Bullet | MkRocketProjectile Rocket
 
 
 

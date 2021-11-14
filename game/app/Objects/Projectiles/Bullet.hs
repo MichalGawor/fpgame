@@ -2,6 +2,8 @@
 {-# LANGUAGE InstanceSigs #-}
 module Objects.Projectiles.Bullet where 
 
+import Graphics.Gloss
+
 import Kinematics
 import Plane
 import Objects.Objects
